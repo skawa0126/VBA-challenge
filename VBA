@@ -1,0 +1,68 @@
+      Sub VBAhw()
+        ' loop worksheets cite: https://excelchamps.com/vba/loop-sheets/
+         Dim ws As Worksheet
+         For Each ws In ThisWorkbook.Worksheets
+            
+        ' headers for new columns
+        ws.Range("i1").Value = "Ticker"
+        ws.Range("j1").Value = "Quarterly Change"
+        ws.Range("k1").Value = "Percentage Change"
+        ws.Range("l1").Value = "Total Stock Volume"
+        
+         ' copy tickers, cite: https://www.statology.org/vba-get-unique-values-from-column/
+         ws.Range("A:A").AdvancedFilter _
+            Action:=xlFilterCopy, CopyToRange:=ws.Range("i2"), Unique:=True
+
+        
+        
+        'percent change
+        
+        'total volume
+        '            sum if cite: https://blog.coupler.io/sumifs-vba/
+        Dim sumrange As Range
+        Dim criteriarange As Range
+        Dim criteria As String
+        Dim i As Integer
+    
+        For i = 2 To 2000
+        
+        Set sumrange = ws.Range("G:G")
+        Set TickerRange = ws.Range("A:A")
+        
+        criteria = ws.Range("I" & i)
+            ' add up column G if column A = column I and put answer in column L
+            
+        ws.Range("L" & i) = WorksheetFunction.SumIfs(sumrange, TickerRange, criteria)
+        Next i
+        
+        'change from begging to end of qtr
+            'define qtr start and end
+
+            Dim TickerRef As String
+            Dim OpenDate As Date
+            
+            Dim qtropen As Integer
+            Dim qtrclose As Integer
+            
+            Set QtrOpen1 = ws.Range("A:C")
+
+            
+            For k = 2 To 1000
+            TickerRef = ws.Range("I" & k)
+            OpenDate = 1 / 2 / 22
+            
+            ' open value: if the row has the ticker reference and the date in the same line, find the value 2 columns over
+            
+            ws.Range("J" & k) = WorksheetFunction.VLookup(TickerRef&OpenDate, QtrOpen1, 3, FALSE)
+            
+            Next k
+            
+        Next ws
+        
+      End Sub
+
+
+
+
+
+
